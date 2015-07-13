@@ -13,6 +13,12 @@
                     <li>
                         <a id="toggle" href="#">About</a>
                     </li>
+                    <li>
+                        <a id="clear" href="#">Clear</a>
+                    </li>
+                    <li>
+                        <a id="generate" href="#">Generate</a>
+                    </li>
                 </ul>
             </div>
             <div id="about">
@@ -39,6 +45,31 @@
                 about.classList.toggle("flipped");
                 board.classList.toggle("flipped");
             })
+            
+            document.querySelector("#clear").addEventListener("click",function () {
+                var buttons=document.querySelectorAll(".button[data-value=on]");
+                for (var i=0;i<buttons.length;i++) {
+                    buttons[i].setAttribute("data-value","off");
+                }
+                
+            });
+            
+            document.querySelector("#generate").addEventListener("click",function () {
+                var buttons=document.querySelectorAll(".button[data-value=on]");
+                for (var i=0;i<buttons.length;i++) {
+                    buttons[i].setAttribute("data-value","off");
+                }
+                
+                buttons=document.querySelectorAll(".button");
+                
+                for (var i=0;i<buttons.length;i++) {
+                    var value="off";
+                    if ((Math.random()*12345)>(Math.random()*20000)) {
+                        value="on";
+                    }
+                    buttons[i].setAttribute("data-value",value);
+                }
+            });
         </script>
     </body>
 </html>
