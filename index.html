@@ -8,11 +8,37 @@
     </head>
     <body>
         <div class="container">
-            
+            <div class="panel">
+                <ul>
+                    <li>
+                        <a id="toggle" href="#">About</a>
+                    </li>
+                </ul>
+            </div>
+            <div id="about">
+                <h1>ToneMatrix</h1>
+                <p>
+                    <dl>
+                      <dt>Made by:</dt>
+                      <dd>and3k5 @ github</dd>
+                      <dt>Made with</dt>
+                      <dd>js and css</dd>
+                    </dl>
+                </p>
+            </div>
         </div>
         <script>
             document.querySelector(".container").appendChild(Board());
             start();
+            
+            document.querySelector("#toggle").addEventListener("click",function () {
+                console.log("focus");
+                var about=document.querySelector("#about");
+                var board=document.querySelector(".board");
+                
+                about.classList.toggle("flipped");
+                board.classList.toggle("flipped");
+            })
         </script>
     </body>
 </html>

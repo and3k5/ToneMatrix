@@ -1,7 +1,13 @@
 body {
     background-image: radial-gradient(ellipse at 50% 20%, #DDDDDD 0%,#777777 100%);
+    color:white;
+    font-family:Verdana;
+    
 }
-
+a, a:hover, a:active, a:visited {
+    color:white;
+    text-decoration:none;
+}
 html {
     height:100%;
 }
@@ -50,6 +56,7 @@ html {
     background-image: radial-gradient(ellipse at 50% 20%, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 100%);
     border-color:#404040;
     box-shadow:inset 0px 0px 15px #404040,0px 0px 15px #404040;
+    transform:rotateY(0deg);
 }
 
 .button[data-value=off] {
@@ -74,3 +81,72 @@ html {
     margin:auto auto;
 }
 
+.sidebar {
+    position:fixed;
+    background-image: radial-gradient(ellipse at 50% 20%, rgba(0,0,0,0.25) 0%,rgba(0,0,0,0.5) 100%);
+    width:100px;
+    height:25px;
+    text-align:center;
+    line-height:25px;
+}
+
+#about {
+    position:absolute;
+    /*top:0px;
+    left:0px;
+    bottom:0px;
+    right:0px;*/
+    width:100%;
+    height:100%;
+    /*padding:15px;*/
+    border-radius:15px;
+    border:solid 1px;
+    background-color:#303030;
+    background-image: radial-gradient(ellipse at 50% 20%, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 100%);
+    border-color:#404040;
+    box-shadow:inset 0px 0px 15px #404040,0px 0px 15px #404040;
+    transform:rotateY(180deg);
+}
+
+.board, #about {
+    backface-visibility: hidden;
+    transition:transform 1s;
+}
+
+.board.flipped {
+    transform:rotateY(180deg);
+}
+
+
+#about.flipped {
+    transform:rotateY(0deg);
+}
+
+.panel {
+    position:relative;
+    width:100%;
+    height:0px;
+}
+
+.panel ul {
+    position:absolute;
+    top:-25px;
+    list-style-type:none;
+    padding:0px;
+    margin:0px;
+    display:flex;
+    
+    width:100%;
+}
+
+.panel ul li {
+    list-style-type:inherit;
+    display:block;
+    width:100px;
+    height:25px;
+    background-image:radial-gradient(circle at 50% 0%,#505050,#303030);
+    text-align:center;
+    border-radius:5px;
+    line-height:25px;
+    
+}
