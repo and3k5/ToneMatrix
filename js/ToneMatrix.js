@@ -246,10 +246,7 @@ var start = function () {
         if (arr.length>0) {
             var gainvalue = 1/arr.length;
             
-            // hacky
             for (var i=0;i<arr.length;i++) {
-                //var row = Array.prototype.indexOf.call(arr[i].parentElement.parentElement.children,arr[i].parentElement);
-                //console.log(row);
                 noteOn(arr[i],gainvalue);
             }
         }
