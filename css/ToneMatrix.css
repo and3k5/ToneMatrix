@@ -146,6 +146,7 @@ html {
     display:block;
     width:100px;
     height:25px;
+    margin:0px 5px;
     background-image:radial-gradient(circle at 50% 0%,#505050,#303030);
     text-align:center;
     border-radius:5px;
