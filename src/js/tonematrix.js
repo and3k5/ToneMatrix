@@ -55,63 +55,7 @@ var Pattern = [
 
     96];
 
-
-
 // Elements
-
-var MouseIsDown = false, Setting = "";
-
-
-// dragleave dragend
-var Button_dragleaveend = function (e) {
-    return false;
-}
-    ;
-
-
-var Button_dragover = function (e) {
-    try {
-        e.preventDefault();
-    }
-    catch (e) {
-
-    }
-    if (MouseIsDown) {
-        this.setAttribute("data-value", Setting);
-    }
-    return false;
-}
-
-var Button_down = function (e) {
-
-    try {
-        e.preventDefault();
-    }
-    catch (e) {
-
-    }
-
-    var newvalue = "on";
-
-    if (this.getAttribute("data-value") == "on") {
-        newvalue = "off";
-    }
-
-    this.setAttribute("data-value", newvalue);
-
-    MouseIsDown = true;
-
-    Setting = this.getAttribute("data-value");
-
-    return false;
-}
-
-var Button_up = function () {
-    MouseIsDown = false;
-}
-
-
-
 
 var audioContext = new AudioContext();
 
@@ -186,53 +130,6 @@ Pattern.forEach(function (n) {
     i++;
 })
 
-var Button = function (f) {
-    var b = document.createElement("div");
-    b.classList.add("button");
-    b.draggable = false;
-    b.setAttribute("draggable", "false");
-    b.setAttribute("data-value", "off");
-    b.addEventListener("dragover", Button_dragover);
-    b.addEventListener("mouseover", Button_dragover);
-    b.addEventListener("dragleave", Button_dragleaveend);
-    b.addEventListener("dragend", Button_dragleaveend);
-    b.addEventListener("mousedown", Button_down);
-    b.addEventListener("mouseup", Button_up);
-
-    b.setAttribute("data-note", f);
-    /*b.gain = audioContext.createGain();
-    b.gain.connect(audioContext.destination);
-    
-    b.oscillator = audioContext.createOscillator();
-    b.oscillator.frequency.value = f;
-    b.oscillator.connect(b.gain);
-    
-    b.gain.gain.value = 0;
-    
-    b.oscillator.start(0);*/
-
-
-    return b;
-},
-    Row = function (n) {
-        var r = document.createElement("div");
-        r.classList.add("row");
-        for (var i = 0; i < buttonsCount; i++) {
-            r.appendChild(Button((Pattern[buttonsCount - n - 1])));
-        }
-        return r;
-    },
-    Board = function () {
-        var b = document.createElement("div");
-        b.classList.add("board");
-        b.setAttribute("data-position", "0");
-        for (var i = 0; i < buttonsCount; i++) {
-            b.appendChild(Row(i));
-        }
-        return b;
-    }
-
-
 var start = function () {
     setInterval(function () {
         var b = document.querySelector(".board");
@@ -267,11 +164,14 @@ function noteOn(a, v) {
 
 }
 
-window.addEventListener("mouseup", Button_up);
-
 // init 
 
-document.querySelector(".container").appendChild(Board());
+import Vue from "vue";
+import Board from "../board.vue";
+
+var board = Object.assign({}, Board, {propsData: { buttonsCount: buttonsCount, pattern: Pattern }});
+
+new Vue(board).$mount(".container>.board");;
 start();
 
 document.querySelector("#toggle").addEventListener("click", function () {
