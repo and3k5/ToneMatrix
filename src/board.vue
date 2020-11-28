@@ -1,8 +1,13 @@
 <template>
-    <div class="board" data-position="0">
-        <div class="row" v-for="i in buttonsCount" v-bind:key="i">
-            <btn :note="(pattern[buttonsCount - i - 1])" v-for="j in buttonsCount" v-bind:key="j" :mouseState="mouseState">
-
+    <div class="board" :data-position="position">
+        <div class="row" v-for="row in rows" v-bind:key="row.key">
+            <btn
+                :note="button.note"
+                :model="button"
+                v-for="button in row.buttons"
+                v-bind:key="button.key"
+                :mouseState="mouseState"
+            >
             </btn>
         </div>
     </div>
@@ -10,6 +15,8 @@
 
 <script>
 import btn from "./button.vue";
+import { noteOn, Pattern } from "./js/notes.js";
+
 export default {
     components: {
         btn,
@@ -19,19 +26,70 @@ export default {
             mouseState: {
                 isDown: false,
                 setting: "",
-            }
-        }
+            },
+            position: 0,
+            rows: [],
+            buttonsCount: 16,
+            pattern: Pattern,
+        };
     },
-    props: {
-        buttonsCount: Number,
-        pattern: Array,
+    watch: {
+        buttonsCount: {
+            handler(newValue) {
+                this.rows.splice(0, this.rows.length);
+
+                for (var i = 0; i < newValue; i++) {
+                    var buttons = [];
+                    for (var j = 0; j < newValue; j++) {
+                        buttons.push({
+                            key: i + "_" + j,
+                            note: this.pattern[this.buttonsCount - i - 1],
+                            on: false,
+                        });
+                    }
+                    this.rows.push({ key: i, buttons });
+                }
+            },
+            immediate: true,
+        },
+    },
+    methods: {
+        start() {
+            var comp = this;
+            setInterval(function () {
+                var b = document.querySelector(".board");
+                comp.position = (comp.position + 1) % comp.buttonsCount;
+
+                var current = comp.position;
+
+                var q =
+                    '.board[data-position="' +
+                    current +
+                    '"] .button:nth-child(' +
+                    (current + 1) +
+                    ")[data-value=on]";
+
+                var arr = comp.rows
+                    .map((row) => row.buttons[current])
+                    .filter((btn) => btn.on === true);
+
+                if (arr.length > 0) {
+                    var gainvalue = 1 / arr.length;
+
+                    for (var i = 0; i < arr.length; i++) {
+                        noteOn(arr[i].note, gainvalue);
+                    }
+                }
+            }, (60 / 128 / 4) * 1000);
+        },
     },
     mounted() {
         console.log(this.buttonsCount);
         var comp = this;
-        window.addEventListener("mouseup",function () {
+        window.addEventListener("mouseup", function () {
             comp.mouseState.isDown = false;
         });
-    }
-}
+        this.start();
+    },
+};
 </script>

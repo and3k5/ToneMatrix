@@ -21,15 +21,6 @@ html {
     user-select: none;
 }
 
-.board .button {
-    width:30px;
-    height:30px;
-    margin:2px;
-    border-radius:2px;
-    background-image: radial-gradient(ellipse at center, rgba(0,0,0,0) 0%,rgba(0,0,0,0.22) 100%); 
-    transition:background-color 100ms;
-}
-
 .board[data-position="0"] .button:nth-child(1)[data-value=on],
 .board[data-position="1"] .button:nth-child(2)[data-value=on],
 .board[data-position="2"] .button:nth-child(3)[data-value=on],
@@ -152,4 +143,12 @@ html {
     border-radius:5px;
     line-height:25px;
     
+}
+.button {
+  width: 30px;
+  height: 30px;
+  margin: 2px;
+  border-radius: 2px;
+  background-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.22) 100%);
+  transition: background-color 100ms;
 }
