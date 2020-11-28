@@ -92,12 +92,9 @@ html {
 .panel {
     position:relative;
     width:100%;
-    height:0px;
 }
 
 .panel ul {
-    position:absolute;
-    top:-25px;
     list-style-type:none;
     padding:0px;
     margin:0px;
