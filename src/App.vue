@@ -24,22 +24,26 @@
                 </dl>
             </div>
         </div>
-        <board ref="board" :class="{'flipped': flipped}"></board>
+        <board ref="board" :class="{'flipped': flipped}" :settings="settings"></board>
+        <settings :settings="settings"></settings>
     </div>
 </template>
 
 <script>
 import board from "./components/board.vue";
-
+import Settings from './components/settings.vue';
+import { createSettings } from "./js/settings.js";
 
 
 export default {
     components: {
         board,
+        Settings,
     },
     data() {
         return {
             flipped: false,
+            settings: createSettings(),
         };
     },
     mounted() {

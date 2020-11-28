@@ -4,6 +4,7 @@
             <btn
                 :note="button.note"
                 :model="button"
+                :position="position"
                 v-for="button in row.buttons"
                 v-bind:key="button.key"
                 :mouseState="mouseState"
@@ -15,11 +16,23 @@
 
 <script>
 import btn from "./button.vue";
-import { noteOn, Pattern } from "../js/notes.js";
+import { createAudioGenerator } from "../js/audio.js";
+import { createNotes } from "../js/note/default.js";
 
 export default {
     components: {
         btn,
+    },
+    props: {
+        settings: Object,
+    },
+    computed: {
+        buttonsCount() {
+            return this.settings.buttonsCount;
+        },
+        rowsCount() {
+            return this.settings.rowsCount;
+        }
     },
     data() {
         return {
@@ -29,31 +42,43 @@ export default {
             },
             position: 0,
             rows: [],
-            buttonsCount: 16,
-            pattern: Pattern,
+            audioGenerator: createAudioGenerator(),
         };
     },
     watch: {
         buttonsCount: {
             handler(newValue) {
-                this.rows.splice(0, this.rows.length);
-
-                for (var i = 0; i < newValue; i++) {
-                    var buttons = [];
-                    for (var j = 0; j < newValue; j++) {
-                        buttons.push({
-                            key: i + "_" + j,
-                            note: this.pattern[this.buttonsCount - i - 1],
-                            on: false,
-                        });
-                    }
-                    this.rows.push({ key: i, buttons });
-                }
+                this.init(this.rowsCount, newValue);
             },
-            immediate: true,
+        },
+        rowsCount: {
+            handler(newValue) {
+                this.init(newValue, this.buttonsCount);
+            },
         },
     },
     methods: {
+        init(rowsCount, buttonsCount) {
+            this.notes = createNotes(rowsCount);
+            this.audioGenerator.initBuffers(this.notes);
+            this.initRowsAndButtons(rowsCount, buttonsCount);
+        },
+        initRowsAndButtons(rowsCount,buttonsCount) {
+            this.rows.splice(0, this.rows.length);
+
+            for (var i = 0; i < rowsCount; i++) {
+                var buttons = [];
+                for (var j = 0; j < buttonsCount; j++) {
+                    buttons.push({
+                        index: j,
+                        key: i + "_" + j,
+                        note: this.notes[rowsCount - i - 1],
+                        on: false,
+                    });
+                }
+                this.rows.push({ key: i, buttons });
+            }
+        },
         clear() {
             this.rows.forEach(row => row.buttons.filter(btn => btn.on === true).forEach(btn => btn.on = false));
         },
@@ -82,14 +107,16 @@ export default {
                     var gainvalue = 1 / arr.length;
 
                     for (var i = 0; i < arr.length; i++) {
-                        noteOn(arr[i].note, gainvalue);
+                        comp.audioGenerator.playNote(arr[i].note, gainvalue);
                     }
                 }
             }, (60 / 128 / 4) * 1000);
         },
     },
+    created() {
+        this.init(this.rowsCount, this.buttonsCount);
+    },
     mounted() {
-        console.log(this.buttonsCount);
         var comp = this;
         window.addEventListener("mouseup", function () {
             comp.mouseState.isDown = false;

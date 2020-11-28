@@ -3,26 +3,99 @@
 // Note number to note name
 // 57 = A4
 var NOTENAMES = ["C?", "C#?/Db?", "D?", "D#?/Eb?", "E?", "F?", "F#?/Gb?", "G?", "G#?/Ab?", "A?", "A#?/Bb?", "B?"];
-function noteToName(num) {
+export function noteToName(num) {
     return NOTENAMES[~~(num) % 12].replace(/\?/g, ~~(num / 12));
 }
 
 // Note number to frequency
 // 57 = 440.0
-function noteToFreq(note) {
+export function noteToFreq(note) {
     return 440 * Math.pow(2, (note - 57) / 12);
 }
 
 // Frequency to note number
 // 440.0 = 57
-function freqToNote(frequency) {
+export function freqToNote(frequency) {
     return Math.round(12 * (Math.log(frequency / 440) / Math.log(2))) + 57;
 }
 
+export const KeysPerOctave = 12;
+
+export function makeOctaves(from,count, additionalKeys) {
+    var result = [];
+    for (var i = 0;i<count;i++) {
+        result.push({index: from+i, partial: false});
+    }
+    if (typeof(additionalKeys) === "number" && additionalKeys > 0)
+        result.push({index: from+count, partial: true, keys: additionalKeys });
+    return result;
+}
+
+export function calculateOctavesScore(octaves, func) {
+    return octaves.reduce((score, oct) => score + func(oct), 0);
+}
+
+export function makeScale(octave, scale) {
+    var start = octave.index * KeysPerOctave;
+    var lastNote = start;
+    var result = [];
+    var notes = octave.partial === true ? octave.keys : scale.length;
+    for (var i = 0;i<notes;i++) {
+        var r = scale[i];
+        var note = lastNote + r;
+        result.push(note);
+        lastNote = note;
+    }
+    return result;
+}
+
+export function makeScales(octaves, scale) {
+    return octaves.flatMap(octave => makeScale(octave, scale));
+}
+
+export function makeOctaveRating(baseOctave, octaveCount, additionalKeys, score) {
+    const octaves = makeOctaves(baseOctave, octaveCount, additionalKeys);
+    return {
+        octaves,
+        score: calculateOctavesScore(octaves, score),
+    };
+}
+
+function diffToRelative(diff) {
+    if (diff > 0)
+        return 1;
+    if (diff < 0)
+        return -1;
+    return 0;
+}
+
+export function getOrderedOctaveRatingsByScore(octaveRatings) {
+    return octaveRatings.concat().sort((a,b) => {
+        const scoreDifference = diffToRelative(a.score - b.score);
+        if (scoreDifference !== 0)
+            return scoreDifference;
+        const lowestOctaveA = a.octaves[0];
+        const lowestOctaveB = b.octaves[0];
+        const indexDifference = diffToRelative(lowestOctaveA.index - lowestOctaveB.index) * -1;
+        return indexDifference;
+    });
+}
+
+export function getBestOctaveRatingByScore(octaveRatings) {
+    var ordered = getOrderedOctaveRatingsByScore(octaveRatings);
+    return ordered[ordered.length - 1];
+}
+
+export function getBestOctavesByRatingScore(octaveRatings) {
+    var best = getBestOctaveRatingByScore(octaveRatings);
+    return best.octaves;
+}
+
+//const oct
 
 // Pattern:
 // C4, D4, F4, G4, A4
-export const Pattern = [
+const Pattern = [
     48, // +3
     50, // +2
     53, // +3
@@ -48,91 +121,3 @@ export const Pattern = [
     93,
 
     96];
-
-// Elements
-
-var audioContext = new AudioContext();
-
-var sampleRate = audioContext.sampleRate;
-var sampleDuration = 0.25;
-var sampleLength = sampleRate * sampleDuration;
-
-function SineBuffer(audioContext, freq) {
-    var buffer = audioContext.createBuffer(1, sampleLength, sampleRate);
-
-    var data = buffer.getChannelData(0);
-
-
-    for (var i = 0; i < sampleLength; i++) {
-        // Math.random() is in [0; 1.0]
-        // audio needs to be in [-1.0; 1.0]
-        var ang = (i / sampleLength) * freq * (360 * sampleDuration);
-        data[i] = (Math.sin(ang * Math.PI / 180) * (1 - i / sampleLength)) * Math.min(i / (sampleLength / 32), 1);
-    }
-
-    return buffer;
-}
-
-var Buffers = [];
-var BufferSources = [];
-
-var i = 0;
-
-/*function DynamicBufferSource(buffer) {
-    this.buffer = buffer;
-    
-    Object.defineProperty(this,"bufferSource",{
-        get: function () {
-            return this._bufferSource;
-        },
-        set: function (v) {
-            this._bufferSource=v;
-            v.buffer=this.buffer;
-        }
-    })
-    
-    this.bufferSource = audioContext.createBufferSource();
-    
-    this.start = function (v) {
-        try {
-            this.bufferSource.stop(v)
-            this.bufferSource.disconnect();
-        }
-        catch (e) {
-            
-        }
-        this.bufferSource = audioContext.createBufferSource();
-        
-        this.bufferSource.start(v);
-        var dbs = this;
-        this.bufferSource.onended = function () {
-            console.log("ended");
-            dbs.stop(0);
-        }
-    }
-    
-    this.stop = function (v) {
-        this.bufferSource.stop(v)
-        this.bufferSource.disconnect();
-        this.bufferSource = audioContext.createBufferSource();
-    }
-}*/
-
-Pattern.forEach(function (n) {
-    Buffers[n] = SineBuffer(audioContext, noteToFreq(n));
-
-    i++;
-})
-
-export function noteOn(note, v) {
-    var src = audioContext.createBufferSource();
-    var gain = audioContext.createGain();
-    src.buffer = Buffers[note];
-    src.connect(gain);
-    gain.connect(audioContext.destination);
-
-    gain.gain.value = v * 0.70;
-
-    src.start(0);
-
-}

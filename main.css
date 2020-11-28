@@ -21,25 +21,7 @@ html {
     user-select: none;
 }
 
-.board[data-position="0"] .button:nth-child(1)[data-value=on],
-.board[data-position="1"] .button:nth-child(2)[data-value=on],
-.board[data-position="2"] .button:nth-child(3)[data-value=on],
-.board[data-position="3"] .button:nth-child(4)[data-value=on],
-.board[data-position="4"] .button:nth-child(5)[data-value=on],
-.board[data-position="5"] .button:nth-child(6)[data-value=on],
-.board[data-position="6"] .button:nth-child(7)[data-value=on],
-.board[data-position="7"] .button:nth-child(8)[data-value=on],
-.board[data-position="8"] .button:nth-child(9)[data-value=on],
-.board[data-position="9"] .button:nth-child(10)[data-value=on],
-.board[data-position="10"] .button:nth-child(11)[data-value=on],
-.board[data-position="11"] .button:nth-child(12)[data-value=on],
-.board[data-position="12"] .button:nth-child(13)[data-value=on],
-.board[data-position="13"] .button:nth-child(14)[data-value=on],
-.board[data-position="14"] .button:nth-child(15)[data-value=on],
-.board[data-position="15"] .button:nth-child(16)[data-value=on] {
-    box-shadow:inset 0px 0px 5px black,0px 0px 15px white;
-    background-color:white;
-}
+
 
 .board {
     padding:15px;
@@ -52,14 +34,6 @@ html {
     transform:rotateY(0deg);
 }
 
-.button[data-value=off] {
-    background-color:#666666;
-}
-
-.button[data-value=on] {
-    background-color:#CCCCCC;
-    box-shadow:inset 0px 0px 5px white,0px 0px 5px white;
-}
 
 .board>.row {
     display:flex;
@@ -144,4 +118,4 @@ html {
     line-height:25px;
     
 }
-.button{width:30px;height:30px;margin:2px;border-radius:2px;background-image:radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.22) 100%);transition:background-color 100ms}
+.button{width:30px;height:30px;margin:2px;border-radius:2px;background-image:radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.22) 100%);transition:background-color 100ms}.button[data-value=off]{background-color:#666}.button[data-value=on]{background-color:#ccc;box-shadow:inset 0px 0px 5px #fff,0px 0px 5px #fff}.button.playing{box-shadow:inset 0px 0px 5px #000,0px 0px 15px #fff;background-color:#fff}

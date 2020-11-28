@@ -1,6 +1,6 @@
 <template>
     <div
-        class="button"
+        :class="{'button': true, 'playing': model.on === true && position === model.index}"
         :data-note="note"
         draggable="false"
         :data-value="model.on ? 'on' : 'off'"
@@ -26,6 +26,20 @@
     );
     transition: background-color 100ms;
 }
+
+.button[data-value=off] {
+    background-color:#666666;
+}
+
+.button[data-value=on] {
+    background-color:#CCCCCC;
+    box-shadow:inset 0px 0px 5px white,0px 0px 5px white;
+}
+
+.button.playing {
+    box-shadow:inset 0px 0px 5px black,0px 0px 15px white;
+    background-color:white;
+}
 </style>
 
 <script>
@@ -34,6 +48,7 @@ export default {
         mouseState: Object,
         note: Number,
         model: Object,
+        position: Number,
     },
     data() {
         return {};
