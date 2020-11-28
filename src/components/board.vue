@@ -15,7 +15,7 @@
 
 <script>
 import btn from "./button.vue";
-import { noteOn, Pattern } from "./js/notes.js";
+import { noteOn, Pattern } from "../js/notes.js";
 
 export default {
     components: {
@@ -54,6 +54,16 @@ export default {
         },
     },
     methods: {
+        clear() {
+            this.rows.forEach(row => row.buttons.filter(btn => btn.on === true).forEach(btn => btn.on = false));
+        },
+        randomize() {
+            var buttons = this.rows.flatMap(row => row.buttons);
+
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].on = (Math.random() * 12345) > (Math.random() * 20000);
+            }
+        },
         start() {
             var comp = this;
             setInterval(function () {
@@ -62,12 +72,7 @@ export default {
 
                 var current = comp.position;
 
-                var q =
-                    '.board[data-position="' +
-                    current +
-                    '"] .button:nth-child(' +
-                    (current + 1) +
-                    ")[data-value=on]";
+                var q = `.board[data-position="${current}"] .button:nth-child(${current+1})[data-value=on]`;
 
                 var arr = comp.rows
                     .map((row) => row.buttons[current])
