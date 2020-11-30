@@ -19,7 +19,7 @@
                     <component :is="overlay.component" :settings="settings"></component>
                 </overlay>
             </div>
-            <board ref="board" :class="{'flipped': flipped}" :settings="settings"></board>
+            <board ref="board" :settings="settings"></board>
         </div>
     </div>
 </template>
@@ -61,7 +61,6 @@ export default {
         return {
             aboutOpen: false,
             settingsOpen: false,
-            flipped: false,
             settings: createSettings(),
             overlays: [
                 {

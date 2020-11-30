@@ -80,15 +80,6 @@ html {
     transition:transform 1s;
 }
 
-.board.flipped {
-    transform:rotateY(180deg);
-}
-
-
-#about.flipped {
-    transform:rotateY(0deg);
-}
-
 .panel {
     position:relative;
     width:100%;
