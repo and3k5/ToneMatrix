@@ -26,6 +26,13 @@
 
 <style lang="scss">
 .container {
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    display:inline-block;
+    margin:auto auto;
+
     .content {
         position:relative;
         .overlays {
@@ -36,6 +43,32 @@
             left:0px;
             width:100%;
             height:100%;
+        }
+
+        .panel {
+            position:relative;
+            width:100%;
+        }
+
+        .panel ul {
+            list-style-type:none;
+            padding:0px;
+            margin:0px;
+            display:flex;
+            
+            width:100%;
+        }
+
+        .panel ul li {
+            list-style-type:inherit;
+            display:block;
+            width:100px;
+            height:25px;
+            margin:0px 5px;
+            background-image:radial-gradient(circle at 50% 0%,#505050,#303030);
+            text-align:center;
+            border-radius:5px;
+            line-height:25px;
         }
     }
 }

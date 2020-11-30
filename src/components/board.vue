@@ -14,6 +14,24 @@
     </div>
 </template>
 
+<style lang="scss">
+.board {
+    padding:15px;
+    border-radius:15px;
+    border:solid 1px;
+    background-color:#303030;
+    background-image: radial-gradient(ellipse at 50% 20%, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 100%);
+    border-color:#404040;
+    box-shadow:inset 0px 0px 15px #404040,0px 0px 15px #404040;
+    transform:rotateY(0deg);
+    user-select: none;
+    
+    >.row {
+        display:flex;
+    }
+}
+</style>
+
 <script>
 import btn from "./button.vue";
 import { createAudioGenerator } from "../js/audio.js";

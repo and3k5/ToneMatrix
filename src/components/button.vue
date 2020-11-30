@@ -15,6 +15,7 @@
 
 <style lang="scss">
 .button {
+    user-select: none;
     width: 30px;
     height: 30px;
     margin: 2px;
