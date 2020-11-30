@@ -1,5 +1,5 @@
 <template>
-    <div class="board" :data-position="position">
+    <div class="board">
         <div class="row" v-for="row in rows" v-bind:key="row.key">
             <btn
                 :note="button.note"
@@ -25,7 +25,7 @@
     box-shadow:inset 0px 0px 15px #404040,0px 0px 15px #404040;
     transform:rotateY(0deg);
     user-select: none;
-    
+
     >.row {
         display:flex;
     }
@@ -114,8 +114,6 @@ export default {
                 comp.position = (comp.position + 1) % comp.buttonsCount;
 
                 var current = comp.position;
-
-                var q = `.board[data-position="${current}"] .button:nth-child(${current+1})[data-value=on]`;
 
                 var arr = comp.rows
                     .map((row) => row.buttons[current])
