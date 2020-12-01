@@ -12,6 +12,9 @@
                     <li>
                         <a href="#" @click="$refs.board.randomize()">Generate</a>
                     </li>
+                    <li>
+                        <a href="#" @click="$refs.board.share()">Share/Load</a>
+                    </li>
                 </ul>
             </div>
             <div class="overlays">

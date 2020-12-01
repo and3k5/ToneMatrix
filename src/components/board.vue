@@ -36,6 +36,7 @@
 import btn from "./button.vue";
 import { createAudioGenerator } from "../js/audio.js";
 import { createNotes } from "../js/note/default.js";
+import { encode } from "../js/base64.js";
 
 export default {
     components: {
@@ -50,6 +51,42 @@ export default {
         },
         rowsCount() {
             return this.settings.rowsCount;
+        },
+        loadCode: {
+            get() {
+                var code = "";
+                code += this.rowsCount.toString(16);
+                code += "x";
+                code += this.buttonsCount.toString(16);
+                code += ":";
+                
+                var data = "";
+
+                var allButtons = this.rows.flatMap(row => row.buttons);
+
+                var values = [];
+
+                var compileValues = function (force) {
+                    if (values.length == 16 || (force === true && values.length > 0)) {
+                        var temp = parseInt(values.map(x => x ? "1" : "0").join(""),2);
+                        data += String.fromCharCode(temp);
+                        values.splice(0,values.length);
+                    }
+                }
+
+                for (var i = 0;i<allButtons.length;i++) {
+                    compileValues();
+                    values.push(allButtons[i].on);
+                }
+                compileValues(true);
+
+                code += encode(data);
+
+                return code;
+            },
+            set() {
+                throw new Error("TODO");
+            }
         }
     },
     data() {
@@ -76,6 +113,13 @@ export default {
         },
     },
     methods: {
+        share() {
+            var oldCode = this.loadCode;
+            var answer = prompt("Code",this.loadCode);
+            if (answer !== oldCode) {
+                this.loadCode = answer;
+            }
+        },
         init(rowsCount, buttonsCount) {
             this.notes = createNotes(rowsCount);
             this.audioGenerator.initBuffers(this.notes);
